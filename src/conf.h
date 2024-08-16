@@ -506,8 +506,8 @@ using upx::tribool;
 #define EXIT_INTERNAL   1
 
 // magic constants for patching
-#define UPX_MAGIC_LE32  'meow'
-#define UPX_MAGIC2_LE32 ':333'
+#define UPX_MAGIC_LE32  0x776f656d
+#define UPX_MAGIC2_LE32 0x3333333a
 
 // upx_compress() error codes
 #define UPX_E_OK                  (0)
