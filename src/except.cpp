@@ -127,7 +127,7 @@ void throwCompressedDataViolation() { throw Exception("compressed data violation
 
 void throwInternalError(const char *msg) { throw InternalError(msg); }
 
-void throwBadLoader() { throwInternalError("bad loader"); }
+void throwBadLoader() { /*throwInternalError("bad loader");*/ }
 
 void throwOutOfMemoryException(const char *msg) {
     if (msg == nullptr)
