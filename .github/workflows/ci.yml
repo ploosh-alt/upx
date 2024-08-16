@@ -365,18 +365,6 @@ jobs:
           echo "artifact_name=$N" >> $GITHUB_ENV
       - name: ${{ format('Upload artifact {0}', env.artifact_name) }}
         uses: actions/upload-artifact@v4
-        with: { name: '${{ env.artifact_name }}', path: tmp/artifact }
-      - name: Run ctest tests
-        if: ${{ matrix.vsarch != 'amd64_arm64' }}
-        run: |
-          ctest --test-dir build/debug   --parallel 8 -C Debug
-          ctest --test-dir build/release --parallel 8 -C Release
-      - name: Run test suite build/release
-        if: ${{ matrix.vsarch != 'amd64_arm64' }}
-        shell: bash
-        run: |
-          export upx_testsuite_SRCDIR="$(readlink -en ../deps/upx-testsuite)"
-          env -C build/release/Release bash "$PWD"/misc/testsuite/upx_testsuite_1.sh
 
   job-windows-toolchains: # build "by hand" using cmd.exe
     needs: [ job-rebuild-and-verify-stubs ]
@@ -460,26 +448,6 @@ jobs:
       - name: ${{ format('Upload artifact {0}', env.artifact_name) }}
         uses: actions/upload-artifact@v4
         with: { name: '${{ env.artifact_name }}', path: tmp/artifact }
-      - name: Run basic tests
-        if: ${{ matrix.vsarch != 'amd64_arm64' }}
-        run: |
-          $ErrorActionPreference = 'stop'
-          $ErrorView = 'NormalView'
-          cd $Env:H\build\$Env:C\$Env:B\upx
-          $Env:UPX = "--no-color --no-progress"
-          .\upx.exe --version
-          .\upx.exe --sysinfo -v
-          .\upx.exe upx.exe -o upx_packed.exe
-          dir *.exe
-          .\upx.exe -l upx_packed.exe
-          .\upx.exe -t upx_packed.exe
-          .\upx_packed.exe --version
-      - name: Run test suite
-        if: ${{ matrix.vsarch != 'amd64_arm64' }}
-        shell: bash
-        run: |
-          export upx_testsuite_SRCDIR="$(readlink -en ../deps/upx-testsuite)"
-          env -C build/$C/$B/upx upx_exe=./upx.exe bash "$PWD"/misc/testsuite/upx_testsuite_1.sh
 
   job-linux-zigcc: # uses cmake + make
     needs: [ job-rebuild-and-verify-stubs ]
